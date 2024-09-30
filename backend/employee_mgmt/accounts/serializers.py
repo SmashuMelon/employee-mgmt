@@ -3,9 +3,12 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 
 class ProfileSerializer(serializers.ModelSerializer):
+    salary = serializers.DecimalField(max_digits=10, decimal_places=2, required=True)  # Set salary as required
+
     class Meta:
         model = Profile
         fields = ['phone_number', 'employee_number', 'email_address', 'salary']
+        
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()
@@ -17,6 +20,10 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         profile_data = validated_data.pop('profile')
+        # Ensure 'salary' is in profile_data
+        if 'salary' not in profile_data:
+            raise serializers.ValidationError({"salary": "This field is required."})
+        
         user = User.objects.create_user(**validated_data)
         Profile.objects.create(user=user, **profile_data)
         return user
