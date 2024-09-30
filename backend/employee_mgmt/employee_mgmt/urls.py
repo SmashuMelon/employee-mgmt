@@ -18,10 +18,20 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from accounts.views import UserCreate
+from django.urls import path, include
+from employee_sessions.views import EmployeeSessionListCreateView, EmployeeSessionDetailView
+from payments.views import PaymentListCreateView, PaymentDetailView
+from accounts.views import UserCreateView, UserDetailView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/register/', UserCreate.as_view(), name='register'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/sessions/', EmployeeSessionListCreateView.as_view(), name='session-list-create'),
+    path('api/sessions/<int:pk>/', EmployeeSessionDetailView.as_view(), name='session-detail'),
+    path('api/payments/', PaymentListCreateView.as_view(), name='payment-list-create'),
+    path('api/payments/<int:pk>/', PaymentDetailView.as_view(), name='payment-detail'),
+    path('api/employees/', UserCreateView.as_view(), name='employee-create'),
+    path('api/employees/<int:pk>/', UserDetailView.as_view(), name='employee-detail'),
 ]

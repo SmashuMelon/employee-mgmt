@@ -1,17 +1,38 @@
+from .models import Profile
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ['phone_number', 'employee_number', 'email_address', 'salary']
+
 class UserSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer()
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password']
+        fields = ['id', 'username', 'email', 'profile', 'password']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        user = User(
-            email=validated_data['email'],
-            username=validated_data['username']
-        )
-        user.set_password(validated_data['password'])
-        user.save()
+        profile_data = validated_data.pop('profile')
+        user = User.objects.create_user(**validated_data)
+        Profile.objects.create(user=user, **profile_data)
         return user
+
+    def update(self, instance, validated_data):
+        profile_data = validated_data.pop('profile')
+        profile = instance.profile
+
+        instance.username = validated_data.get('username', instance.username)
+        instance.email = validated_data.get('email', instance.email)
+        instance.save()
+
+        profile.phone_number = profile_data.get('phone_number', profile.phone_number)
+        profile.employee_number = profile_data.get('employee_number', profile.employee_number)
+        profile.email_address = profile_data.get('email_address', profile.email_address)
+        profile.salary = profile_data.get('salary', profile.salary)
+        profile.save()
+
+        return instance

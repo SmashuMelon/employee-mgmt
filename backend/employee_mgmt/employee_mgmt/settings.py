@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts',
+    'employee_sessions',
+    'payments',
 
 ]
 CORS_ALLOW_ALL_ORIGINS = True
