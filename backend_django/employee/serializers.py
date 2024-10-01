@@ -1,5 +1,4 @@
 from rest_framework.serializers import ModelSerializer, CharField
-from rest_framework import serializers
 from .models import Employee
 from django.contrib.auth.hashers import make_password
 
