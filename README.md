@@ -1,65 +1,80 @@
-# Employee Management System - Django(Python)
+# Employee Management
 
-Employee Management System built in a Python Framework Django and PostgreSQL as Database. This webapp include the functionality like...
+A web application with React and Django - Django Rest Framework
 
-1. Login / Registration (Admin, Employee)
-2. Add / Manage Employee (Admin)
-3. Publish / Manage Notice (Admin)
-4. Add / Manage Attendance (Admin)
-5. Assign / Manage Work (Employee)
-6. Send Request (Employee)
-7. View Request, Notice, Works etc...
+Front End: React-Vite, React Query, React Hook Form, TailwindCss
 
-## How to Use this Project?
-***
-- Install Python to your System.
-- Run Following command to your terminal.
-    ```python
-    pip install django
-    ```
-- Install Pipenv for Virtual Environment, run the command...
-    ```python
-    pip install pipenv
-    ```
-- Clone the repository to your local system.
-- Enter in Virtual Environment by running following command in Current Working Directory.
-    ```python
-    pipenv shell
-    ```
-- Setup PostgreSQL Database and update database name and password in settings.py file in employeemanagement.
-- Make the Migrations, run the command
-    ```python
-    python manage.py makemigrations
-    ```
-- Migrate the App, run the command
-    ```python
-    python manage.py migrate
-    ```
-- Finally Run the App, run the command.
-    ```python
-    python manage.py runserver
-    ```
-- Hola, It's running !!
+Back End: Django, Django Rest Framework
 
-## Screenshots
+## Table of Contents
 
-Login
-![Login](https://github.com/omjogani/employee-management-django/blob/master/screenshots/Login.png "Login")
+- [About The Project](#about)
 
-Dashboard
-![Dashboard](https://github.com/omjogani/employee-management-django/blob/master/screenshots/Dashboard.png?raw=true "Dashboard")
+- [Tech Stack](#tech-stack)
 
-Assign Work
-![Assign Work](https://github.com/omjogani/employee-management-django/blob/master/screenshots/Assign%20Work.png?raw=true "Assign Work")
+- [Work flow](#work-flow)
 
-Notice
-![Notice](https://github.com/omjogani/employee-management-django/blob/master/screenshots/Notice.png?raw=true "Notice")
+- [Getting started](#getting-started)
 
-Admin (Manage Employee)
-![Admin (Manage Employee)](https://github.com/omjogani/employee-management-django/blob/master/screenshots/Admin%20Employee.png?raw=true "Admin (Manage Employee)")
+## About The Project
 
-### Check out more Screenshots in Screenshot Folder...
+A web application built with React (UI) and Django Rest Framework (API).
 
->If you found this useful, make sure to give it a star 🌟
+- Department: User can list, create, update, and delete.
+- Employee: User can search, list, create, update, and delete.
 
-## Thank You!!
+## Tech Stack
+
+- ##### React.js, React Query, React Hook Form, TailwindCss, Typescript
+- ##### Django - Django Rest Framework
+
+## Work Flow
+
+https://github.com/daniel-liemng/employyee_react_django/blob/master/screenshots/employee_video.webm
+
+- Homepage
+
+![Image](https://github.com/daniel-liemng/employyee_react_django/blob/master/screenshots/Home.PNG)
+
+- User can list, create, update and delete department.
+
+![Image](https://github.com/daniel-liemng/employyee_react_django/blob/master/screenshots/EditDepartment.PNG)
+
+![Image](https://github.com/daniel-liemng/employyee_react_django/blob/master/screenshots/DeleteDepartment.PNG)
+
+- User can list, search, create, update and delete employee.
+
+![Image](https://github.com/daniel-liemng/employyee_react_django/blob/master/screenshots/AddEmployeeError.PNG)
+
+![Image](https://github.com/daniel-liemng/employyee_react_django/blob/master/screenshots/EditEmployee.PNG)
+
+![Image](https://github.com/daniel-liemng/employyee_react_django/blob/master/screenshots/DeleteEmployee.PNG)
+
+## Getting started
+
+**1.** In order to run this app, you need to have `node.js`, python, django and package manager like npm or yarn installed.
+
+**2.** Clone the Git Repository: `https://github.com/daniel-liemng/employyee_react_django.git`
+
+**3.** Install server-side and client-side dependencies
+
+##### Environment variables
+
+Server-side
+
+```
+python -m venv env
+source env/Scripts/active
+pip install django
+pip install djangorestframework
+cd backend_django
+python manage.py runserver
+```
+
+Client-side
+
+```
+cd frontend_react
+npm install
+npm run dev
+```
