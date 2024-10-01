@@ -6,26 +6,28 @@ import { toast } from 'react-hot-toast';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { TbTrashX } from 'react-icons/tb';
 
-import { useGetAllEmployeesQuery } from '../../hooks/employeeHooks';
-import { useGetAllDepartmentsQuery } from '../../hooks/departmentHooks';
+import { useGetAllTasksQuery } from '../../hooks/tasksHooks';
 import Loading from '../shared/Loading';
+import { Task } from '../../types/task';
+// import DeleteTaskModal from './DeleteTaskModal';
+// import TaskFormModal from './TaskFormModal';
+import { useGetAllEmployeesQuery } from '../../hooks/employeeHooks';
 import { Employee } from '../../types/employee';
-import DeleteEmployeeModal from './DeleteEmployeeModal';
-import EmployeeFormModal from './EmployeeFormModal';
-import { Department } from '../../types/department';
+import TaskFormModal from './TaskFormModal';
+import DeleteTaskModal from './DeleteTask';
 
-interface EmployeeListProps {
+interface TaskListProps {
   searchText: string;
 }
 
-const EmployeeList: React.FC<EmployeeListProps> = ({ searchText }) => {
-  const { data, isLoading, error } = useGetAllEmployeesQuery();
-  const { data: departmentData, isLoading: departmentIsLoading, error:departmentError } = useGetAllDepartmentsQuery();
+const TaskList: React.FC<TaskListProps> = ({ searchText }) => {
+  const { data, isLoading, error } = useGetAllTasksQuery();
+  const { data: employeeData, error: empError, isLoading: empIsLoading } = useGetAllEmployeesQuery();
 
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
 
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee>();
+  const [selectedTask, setSelectedTask] = useState<Task>();
 
   const handleFormClose = () => {
     setIsFormOpen(false);
@@ -35,19 +37,18 @@ const EmployeeList: React.FC<EmployeeListProps> = ({ searchText }) => {
     setIsDeleteOpen(false);
   };
 
-  console.log('BBB', data);
 
   if (isLoading) {
     return <Loading />;
   }
-  if (departmentIsLoading) {
+  if (empIsLoading) {
     return <Loading />;
+  }
+  if (empError) {
+    toast.error('Something went wrong');
   }
 
   if (error) {
-    toast.error('Something went wrong');
-  }
-  if (departmentError) {
     toast.error('Something went wrong');
   }
 
@@ -56,59 +57,48 @@ const EmployeeList: React.FC<EmployeeListProps> = ({ searchText }) => {
       <table className='w-full table-auto border-collapse border border-slate-700'>
         <thead>
           <tr>
-            <th className='border border-slate-600 p-3 bg-slate-700'>Name</th>
-            <th className='border border-slate-600 p-3 bg-slate-700'>Email</th>
+            <th className='border border-slate-600 p-3 bg-slate-700'>Title</th>
+            <th className='border border-slate-600 p-3 bg-slate-700'>Description</th>
             <th className='border border-slate-600 p-3 bg-slate-700'>
-              Department
+              Assigned To
             </th>
             <th className='border border-slate-600 p-3 bg-slate-700'>
-              Salary
+              Status
             </th>
-            <th className='border border-slate-600 p-3 bg-slate-700'>
-              Location
-            </th>
-            {/* <th className='border border-slate-600 p-3 bg-slate-700'>Status</th> */}
-            <th className='border border-slate-600 p-3 bg-slate-700'>Action</th>
           </tr>
         </thead>
         <tbody>
           {/* {!data && <tr>No data</tr>} */}
           {data
-            .filter((employee: Employee) =>
-              employee.name.toLowerCase().includes(searchText.toLowerCase())
+            .filter((task: Task) =>
+              task.title.toLowerCase().includes(searchText.toLowerCase())
             )
-            .map((employee: Employee) => (
-              <tr key={employee.id}>
-                <td className='border border-slate-700 p-3'>{employee.name}</td>
+            .map((task: Task) => (
+              <tr key={task.id}>
+                <td className='border border-slate-700 p-3'>{task.title}</td>
                 <td className='border border-slate-700 p-3'>
-                  {employee.email}
+                  {task.description}
                 </td>
                 <td className='border border-slate-700 p-3'>
-                  {departmentData?.find((department: Department) => department.id === employee.department)?.name}
-
+                  {/* {task.assigned_to} */}
+                  {employeeData?.find((employee: Employee) => employee.id === task.assigned_to)?.name}
                 </td>
-                <td className='border border-slate-700 p-3'>
-                  {employee.salary}
-                </td>
-                <td className='border border-slate-700 p-3'>
-                  {employee.location}
-                </td>
-                {/* <td className='border border-slate-700 border-b-0 p-3 flex justify-center'>
-                  {employee.status ? (
+                <td className='border border-slate-700 border-b-0 p-3 flex justify-center'>
+                  {task.is_completed ? (
                     <div className='w-fit h-fit px-3 py-1 bg-teal-300 text-gray-700 text-sm font-medium rounded-full flex justify-center items-center border-b-0'>
-                      Active
+                      Completed
                     </div>
                   ) : (
                     <div className='w-fit h-fit px-3 py-1 bg-red-400 text-gray-700 text-sm font-medium rounded-full flex justify-center items-center'>
-                      Inactive
+                      In-Progress
                     </div>
                   )}
-                </td> */}
+                </td>
                 <td className='border border-slate-700 p-3'>
                   <div className='flex justify-center gap-2'>
                     <div
                       onClick={() => {
-                        setSelectedEmployee(employee);
+                        setSelectedTask(task);
                         setIsFormOpen(true);
                       }}
                       className='bg-teal-300 rounded-full w-8 h-8 flex justify-center items-center cursor-pointer'
@@ -117,7 +107,7 @@ const EmployeeList: React.FC<EmployeeListProps> = ({ searchText }) => {
                     </div>
                     <div
                       onClick={() => {
-                        setSelectedEmployee(employee);
+                        setSelectedTask(task);
                         setIsDeleteOpen(true);
                       }}
                       className='bg-red-400 rounded-full w-8 h-8 flex justify-center items-center cursor-pointer'
@@ -131,18 +121,18 @@ const EmployeeList: React.FC<EmployeeListProps> = ({ searchText }) => {
         </tbody>
       </table>
 
-      <EmployeeFormModal
-        employee={selectedEmployee}
+       <TaskFormModal
+        task={selectedTask}
         isOpen={isFormOpen}
         handleClose={handleFormClose}
       />
-      <DeleteEmployeeModal
-        employee={selectedEmployee}
+      <DeleteTaskModal
+        task={selectedTask}
         isOpen={isDeleteOpen}
         handleClose={handleDeleteClose}
-      />
+      /> 
     </div>
   );
 };
 
-export default EmployeeList;
+export default TaskList;

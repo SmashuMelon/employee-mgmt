@@ -36,14 +36,15 @@ def login_view(request):
 
 # View for admins to view or create employees
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated, IsAdminUser])
+# @permission_classes([IsAuthenticated, IsAdminUser])
 def employees(request):
     if request.method == 'GET':
         # Admins can view all employees, non-admins can only view their own details
-        if request.user.is_admin:
-            employees = Employee.objects.all()
-        else:
-            employees = Employee.objects.filter(id=request.user.id)
+        employees = Employee.objects.all()
+        # if request.user.is_admin:
+        #     employees = Employee.objects.all()
+        # else:
+        #     employees = Employee.objects.filter(id=request.user.id)
 
         serializer = EmployeeSerializer(employees, many=True)
         return Response(serializer.data)
@@ -58,7 +59,7 @@ def employees(request):
 
 # View for admins or employees to view, update, or delete a specific employee
 @api_view(['GET', 'PATCH', 'PUT', 'DELETE'])
-@permission_classes([IsAuthenticated, IsAdminOrOwner])
+# @permission_classes([IsAuthenticated, IsAdminOrOwner])
 def employee(request, pk):
     employee_obj = get_object_or_404(Employee, id=pk)
 
@@ -87,7 +88,7 @@ def employee(request, pk):
 
 # View for authenticated users to retrieve their own employee details
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def employee_details(request):
     serializer = EmployeeSerializer(request.user)
     return Response(serializer.data)

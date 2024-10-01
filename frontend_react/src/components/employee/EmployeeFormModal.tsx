@@ -22,6 +22,7 @@ const empSchema = yup
     email: yup.string().email().required(),
     location: yup.string().required(),
     department: yup.number().required(),
+    empSalary: yup.number().required(),
     status: yup.boolean(),
   })
   .required();
@@ -65,16 +66,27 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     console.log(data);
-
-    await createEmployee({
-      name: data.empName,
-      email: data.email,
-      location: data.location,
-      department: Number(data.department),
-    });
-
-    toast.success('Employee Created');
-    reset();
+    if(!employee){
+      await createEmployee({
+        name: data.empName,
+        email: data.email,
+        location: data.location,
+        department: Number(data.department),
+        salary: Number(data.empSalary),
+      });
+      toast.success('Employee Created');
+    }else{
+      
+      await editEmployee({
+        id: employee.id,
+        name: data.empName,
+        email: data.email,
+        department: data.department,
+        salary: data.empSalary,
+      });
+      toast.success('Employee Edited');
+    }
+      reset();
     handleClose();
   };
 
@@ -152,7 +164,25 @@ const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({
             </p>
           </div>
         </div>
-
+        <div className='mb-3'>
+            <label
+              htmlFor='empSalary'
+              className='block mb-2 text-sm font-medium text-gray-400 '
+            >
+              Salary
+            </label>
+            <input
+              className='shadow appearance-none border border-gray-400 rounded w-full py-2 px-3 bg-slate-700 text-gray-200 leading-tight focus:outline-none focus:shadow-outline'
+              id='empSalary'
+              type='number'
+              {...register('empSalary')}
+              defaultValue={employee?.salary || ''}
+              placeholder='10000'
+            />
+            <p className='my-1 text-red-400 text-sm capitalize'>
+              {errors.empName && 'Name Is A Required Field'}
+            </p>
+          </div>
         <div className='mb-3'>
           <label
             htmlFor='department'

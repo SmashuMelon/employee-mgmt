@@ -14,7 +14,9 @@ export const useGetAllDepartmentsQuery = () =>
 
 export const useCreateDepartmentMutation = () =>
   useMutation({
-    mutationFn: async (depData: { name: string }) =>
+    mutationFn: async (depData: { 
+      name: string 
+    }) =>
       (await axios.post('/api/departments/', depData)).data,
     onSuccess: () => queryClient.invalidateQueries(['all-departments']),
   });
@@ -29,6 +31,6 @@ export const useEditDepartmentMutation = () =>
 export const useDeleteDepartmentMutation = () =>
   useMutation({
     mutationFn: async ({ id }: { id: number }) =>
-      (await axios.delete(`/api/departments/${id}`)).data,
+      (await axios.delete(`/api/departments/${id}/`)).data,
     onSuccess: () => queryClient.invalidateQueries(['all-departments']),
   });

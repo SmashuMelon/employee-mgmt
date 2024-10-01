@@ -9,7 +9,7 @@ from employee.permissions import IsAdminUser  # Make sure this permission exists
 
 # View for admin to create and list tasks
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated, IsAdminUser])
+# @permission_classes([IsAuthenticated, IsAdminUser])
 def tasks(request):
     if request.method == 'GET':
         tasks = Task.objects.all()
@@ -22,6 +22,35 @@ def tasks(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# View for admins or tasks to view, update, or delete a specific task
+@api_view(['GET', 'PATCH', 'PUT', 'DELETE'])
+# @permission_classes([IsAuthenticated, IsAdminOrOwner])
+def task(request, pk):
+    task_obj = get_object_or_404(Task, id=pk)
+
+    if request.method == 'GET':
+        serializer = TaskSerializer(task_obj)
+        return Response(serializer.data)
+
+    elif request.method == 'PATCH':
+        serializer = TaskSerializer(task_obj, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'PUT':
+        serializer = TaskSerializer(task_obj, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'Task updated successfully', 'data': serializer.data}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        task_obj.delete()
+        return Response({'message': 'Task deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
 
 # View for marking a task as complete
 @api_view(['PATCH'])

@@ -7,6 +7,7 @@ export type Employee = {
   createdAt: string;
   updatedAt: string;
   department: number;
+  salary: number;
   depName?: string;
   // department: {
   //   name: string;
