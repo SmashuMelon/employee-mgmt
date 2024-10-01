@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'department',
     'employee',
+    'task',
 ]
 
 MIDDLEWARE = [
