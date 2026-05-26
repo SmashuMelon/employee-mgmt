@@ -3,13 +3,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { useMutation, useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import api from '../services/api';
 import { queryClient } from '../main';
 
 export const useGetAllDepartmentsQuery = () =>
   useQuery({
     queryKey: ['all-departments'],
-    queryFn: async () => (await axios.get('/api/departments')).data,
+    queryFn: async () => (await api.get('/api/departments')).data,
   });
 
 export const useCreateDepartmentMutation = () =>
@@ -17,20 +17,20 @@ export const useCreateDepartmentMutation = () =>
     mutationFn: async (depData: { 
       name: string 
     }) =>
-      (await axios.post('/api/departments/', depData)).data,
+      (await api.post('/api/departments/', depData)).data,
     onSuccess: () => queryClient.invalidateQueries(['all-departments']),
   });
 
 export const useEditDepartmentMutation = () =>
   useMutation({
     mutationFn: async ({ id, name }: { id: number; name: string }) =>
-      (await axios.put(`/api/departments/${id}`, { name })).data,
+      (await api.put(`/api/departments/${id}`, { name })).data,
     onSuccess: () => queryClient.invalidateQueries(['all-departments']),
   });
 
 export const useDeleteDepartmentMutation = () =>
   useMutation({
     mutationFn: async ({ id }: { id: number }) =>
-      (await axios.delete(`/api/departments/${id}/`)).data,
+      (await api.delete(`/api/departments/${id}/`)).data,
     onSuccess: () => queryClient.invalidateQueries(['all-departments']),
   });

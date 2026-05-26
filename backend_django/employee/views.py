@@ -31,7 +31,25 @@ def login_view(request):
     user = authenticate(username=username, password=password)
     if user is not None:
         token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key}, status=status.HTTP_200_OK)
+
+        profile = None
+        employee_profile = Employee.objects.filter(email=user.email).first()
+        if employee_profile is not None:
+            profile = {
+                'id': employee_profile.id,
+                'name': employee_profile.name,
+                'email': employee_profile.email,
+                'department': employee_profile.department.id if employee_profile.department else None,
+                'location': employee_profile.location,
+                'salary': float(employee_profile.salary),
+                'is_admin': employee_profile.is_admin,
+            }
+
+        response_data = {'token': token.key}
+        if profile is not None:
+            response_data['profile'] = profile
+
+        return Response(response_data, status=status.HTTP_200_OK)
     return Response({'error': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 # View for admins to view or create employees

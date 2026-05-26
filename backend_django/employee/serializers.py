@@ -1,8 +1,8 @@
-from rest_framework.serializers import ModelSerializer, CharField
+from rest_framework.serializers import ModelSerializer, BooleanField
 from .models import Employee
 
 class EmployeeSerializer(ModelSerializer):
-    is_admin = CharField(read_only=True) 
+    is_admin = BooleanField(read_only=True)
     class Meta:
         model = Employee
         fields = [

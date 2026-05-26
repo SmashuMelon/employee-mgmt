@@ -28,6 +28,13 @@ cd backend_django
 python manage.py runserver
 ```
 
+To seed admin/employee accounts:
+
+```
+cd backend_django
+python manage.py seed_initial_users
+```
+
 Client-side
 
 ```

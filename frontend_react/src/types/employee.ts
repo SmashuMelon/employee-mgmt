@@ -3,13 +3,10 @@ export type Employee = {
   name: string;
   email: string;
   location: string;
-  status: boolean;
-  createdAt: string;
-  updatedAt: string;
   department: number;
   salary: number;
+  is_admin: boolean;
+  created_at: string;
+  updated_at: string;
   depName?: string;
-  // department: {
-  //   name: string;
-  // };
 };
