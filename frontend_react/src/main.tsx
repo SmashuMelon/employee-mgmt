@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import App from './App.tsx';
+import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { setAuthToken } from './services/api';
 import './index.css';
@@ -16,8 +17,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <React.StrictMode>
-        <Toaster position='top-center' toastOptions={{ duration: 5000 }} />
-        <App />
+        <BrowserRouter>
+          <Toaster position='top-center' toastOptions={{ duration: 5000 }} />
+          <App />
+        </BrowserRouter>
       </React.StrictMode>
     </AuthProvider>
   </QueryClientProvider>

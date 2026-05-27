@@ -8,6 +8,7 @@ from rest_framework.authtoken.models import Token
 from .models import Employee
 from .serializers import EmployeeSerializer
 from employee.permissions import IsAdminUser, IsAdminOrOwner
+from django.contrib.auth.models import User
 
 @api_view(['POST'])
 @permission_classes([AllowAny])  # Allow any user to access this view
@@ -21,6 +22,52 @@ def register_view(request):
             'message': 'Employee registered successfully.'
         }, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register_account(request):
+    """Create a Django auth User for an existing Employee using their email.
+
+    Expected POST body: {"email": "...", "username": "...", "password": "..."}
+    """
+    email = request.data.get('email')
+    username = request.data.get('username')
+    password = request.data.get('password')
+
+    if not email or not username or not password:
+        return Response({'error': 'email, username and password are required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Find employee by email
+    employee = Employee.objects.filter(email=email).first()
+    if employee is None:
+        return Response({'error': 'No employee found with provided email.'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Check if username or email already used by a User
+    if User.objects.filter(username=username).exists():
+        return Response({'error': 'Username already taken.'}, status=status.HTTP_400_BAD_REQUEST)
+    if User.objects.filter(email=email).exists():
+        return Response({'error': 'An account already exists for this email.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Create the auth user
+    user = User(username=username, email=email)
+    user.set_password(password)
+    user.save()
+
+    # Create auth token
+    token, _ = Token.objects.get_or_create(user=user)
+
+    profile = {
+        'id': employee.id,
+        'name': employee.name,
+        'email': employee.email,
+        'department': employee.department.id if employee.department else None,
+        'location': employee.location,
+        'salary': float(employee.salary),
+        'is_admin': employee.is_admin,
+    }
+
+    return Response({'token': token.key, 'profile': profile}, status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])  # Allow any user to access this view

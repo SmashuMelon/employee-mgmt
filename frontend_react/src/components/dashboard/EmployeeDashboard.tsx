@@ -43,21 +43,26 @@ const EmployeeDashboard = () => {
       <div className='flex gap-3 h-full w-full min-h-screen p-5 flex-wrap'>
         <section className='border border-gray-200 p-3 rounded-lg flex-1'>
           <h2 className='text-3xl text-center mt-5 mb-8'>Profile</h2>
-          <div className='space-y-3 text-slate-700'>
+          <div className='space-y-3 text-slate-100'>
             <p>
-              <strong>Name:</strong> {user?.name}
+              <strong className='text-slate-100'>Name:</strong>{' '}
+              <span className='text-slate-100'>{user?.name}</span>
             </p>
             <p>
-              <strong>Email:</strong> {user?.email}
+              <strong className='text-slate-100'>Email:</strong>{' '}
+              <span className='text-slate-100'>{user?.email}</span>
             </p>
             <p>
-              <strong>Department:</strong> {departmentName ?? 'Unassigned'}
+              <strong className='text-slate-100'>Department:</strong>{' '}
+              <span className='text-slate-100'>{departmentName ?? 'Unassigned'}</span>
             </p>
             <p>
-              <strong>Location:</strong> {user?.location || 'Not specified'}
+              <strong className='text-slate-100'>Location:</strong>{' '}
+              <span className='text-slate-100'>{user?.location || 'Not specified'}</span>
             </p>
             <p>
-              <strong>Salary:</strong> {user?.salary ? `$${user.salary}` : 'Not specified'}
+              <strong className='text-slate-100'>Salary:</strong>{' '}
+              <span className='text-slate-100'>{user?.salary ? `$${user.salary}` : 'Not specified'}</span>
             </p>
           </div>
         </section>
@@ -77,21 +82,29 @@ const EmployeeDashboard = () => {
             </div>
           ) : (
             <div className='overflow-x-auto'>
-              <table className='w-full table-auto border-collapse border border-slate-300'>
+              <table className='w-full table-auto border-collapse border border-slate-700'>
                 <thead>
                   <tr>
-                    <th className='border border-slate-300 bg-slate-100 px-4 py-3 text-left text-sm font-semibold text-slate-700'>Title</th>
-                    <th className='border border-slate-300 bg-slate-100 px-4 py-3 text-left text-sm font-semibold text-slate-700'>Description</th>
-                    <th className='border border-slate-300 bg-slate-100 px-4 py-3 text-left text-sm font-semibold text-slate-700'>Status</th>
+                    <th className='border border-slate-600 p-3 bg-slate-700'>Title</th>
+                    <th className='border border-slate-600 p-3 bg-slate-700'>Description</th>
+                    <th className='border border-slate-600 p-3 bg-slate-700'>Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {assignedTasks.map((task: Task) => (
                     <tr key={task.id}>
-                      <td className='border border-slate-300 px-4 py-3'>{task.title}</td>
-                      <td className='border border-slate-300 px-4 py-3'>{task.description}</td>
-                      <td className='border border-slate-300 px-4 py-3'>
-                        {task.is_completed ? 'Completed' : 'In Progress'}
+                      <td className='border border-slate-700 p-3'>{task.title}</td>
+                      <td className='border border-slate-700 p-3'>{task.description}</td>
+                      <td className='border border-slate-700 p-3'>
+                        {task.is_completed ? (
+                          <div className='w-fit h-fit px-3 py-1 bg-teal-300 text-gray-700 text-sm font-medium rounded-full flex justify-center items-center border-b-0'>
+                            Completed
+                          </div>
+                        ) : (
+                          <div className='w-fit h-fit px-3 py-1 bg-red-400 text-gray-700 text-sm font-medium rounded-full flex justify-center items-center'>
+                            In Progress
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}

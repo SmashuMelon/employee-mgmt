@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const { login } = useAuth();
@@ -57,9 +58,27 @@ const Login = () => {
             {isSubmitting ? 'Signing in…' : 'Sign in'}
           </button>
         </form>
+
+        <div className='mt-4 text-center'>
+          <p className='text-sm text-[#dbe8e4]'>Don't have an account?</p>
+          <RegisterButton />
+        </div>
       </div>
     </div>
   );
 };
 
 export default Login;
+
+const RegisterButton = () => {
+  const navigate = useNavigate();
+
+  return (
+    <button
+      onClick={() => navigate('/register')}
+      className='mt-3 inline-flex items-center justify-center rounded-2xl border border-[#74d7c9] bg-transparent px-4 py-2 text-sm font-medium text-[#94e2d5] hover:bg-[#0f3f38]'
+    >
+      Register
+    </button>
+  );
+};
